@@ -1,4 +1,4 @@
-package com.book.task.service;
+package com.book.todo.service;
 
 import java.util.Optional;
 
@@ -7,9 +7,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.book.task.dto.TaskDto;
-import com.book.task.entity.Task;
-import com.book.task.repository.TaskRepository;
+import com.book.todo.dto.TaskDto;
+import com.book.todo.entity.Task;
+import com.book.todo.repository.TaskRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
