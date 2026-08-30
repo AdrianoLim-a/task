@@ -10,45 +10,35 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
-
-
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-
 
 import com.book.todo.dto.TaskDto;
 import com.book.todo.entity.Task;
 import com.book.todo.service.TaskService;
 import com.book.todo.uri.TaskUri;
 
-
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RestController
 @RequestMapping("/todo/")
-
+@RepositoryRestController
+@RequiredArgsConstructor
 public class TaskController {
 
 	
     private final PagedResourcesAssembler pagedResourcesAssembler;
     private final TaskService taskService;
 
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TaskController.class);
-    
-    public TaskController(PagedResourcesAssembler pagedResourcesAssembler, TaskService taskService) {
-        this.pagedResourcesAssembler = pagedResourcesAssembler;
-        this.taskService = taskService;
-    }
     @GetMapping(path = TaskUri.TASKS )
     public ResponseEntity<?> getTasks(TaskDto taskDto, Pageable pageable, PersistentEntityResourceAssembler resourceAssembler) {
         log.info("TasksController: " + taskDto);
@@ -74,7 +64,8 @@ public class TaskController {
         }
     }
 
-    @PostMapping(path = TaskUri.CREATE_TASK)
+    
+	@PostMapping(path = TaskUri.CREATE_TASK)
     public ResponseEntity<?> createTask(@RequestBody TaskDto taskDto, Pageable pageable, PersistentEntityResourceAssembler resourceAssembler) {
         log.info("TasksController: " + taskDto);
         Task events = taskService.saveTask(taskDto);
@@ -83,10 +74,22 @@ public class TaskController {
         Link allTasksLink = WebMvcLinkBuilder.linkTo(this.getClass()).slash("/tasks").withRel("all tasks");
 
         EntityModel<Task> taskResource = EntityModel.of(events);
-        taskResource.add(selfLink, allTasksLink);
+        taskResource.add(selfLink, allTasksLink); 
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("CustomResponseHeader", "CustomValue");
-        return new ResponseEntity<EntityModel<Task>>(taskResource, responseHeaders, HttpStatus.CREATED);//nom
+        return new ResponseEntity<EntityModel<Task>>(taskResource, responseHeaders, HttpStatus.CREATED);
+    }
+	
+	
+	@DeleteMapping(path = TaskUri.TASK) 
+    public ResponseEntity<Void> deleteTask(@PathVariable("id") Long taskId) {
+        try {
+            log.info("TasksController - Deletando tarefa id: {}", taskId);
+            taskService.deleteTask(taskId);
+            return ResponseEntity.noContent().build(); 
+        } catch (RuntimeException exc) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task Not Found", exc);
+        }
     }
 }

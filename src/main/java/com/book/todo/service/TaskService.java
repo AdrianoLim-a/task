@@ -38,5 +38,12 @@ public class TaskService {
 		Task task = modelMapper.map(taskDto, Task.class);
 		return tasksRepository.save(task);
 	}
+	
+	public void deleteTask(Long taskId) {
+	    if (!tasksRepository.existsById(taskId)) {
+	        throw new RuntimeException("Task não encontrada com id: " + taskId);
+	    }
+	    tasksRepository.deleteById(taskId);
+	}
 
 }
