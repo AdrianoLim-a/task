@@ -87,6 +87,6 @@ public class TaskController {
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("CustomResponseHeader", "CustomValue");
-        return new ResponseEntity<EntityModel<Task>>(taskResource, responseHeaders, HttpStatus.CREATED);
+        return new ResponseEntity<EntityModel<Task>>(taskResource, responseHeaders, HttpStatus.CREATED);//nom
     }
 }
