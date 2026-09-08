@@ -52,7 +52,13 @@
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-rest-hal-explorer</artifactId>
 		</dependency>
-
+		<!--
+		https://mvnrepository.com/artifact/io.springfox/springofox-boot-starter -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-boot-starter</artifactId>
+			<version>3.0.0</version>
+		</dependency>
 		<!-- Ferramentas de Desenvolvimento e Banco H2 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -73,7 +79,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.querydsl</groupId>
-			<artifactId>querydsl-apt</artifactId>		
+			<artifactId>querydsl-apt</artifactId>
 			<scope>provided</scope>
 		</dependency>
 
